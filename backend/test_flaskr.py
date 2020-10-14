@@ -18,6 +18,14 @@ class TriviaTestCase(unittest.TestCase):
         self.database_path = "postgres://{}/{}".format('localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
+        #Sample Trivia Question to be used for testing  
+        self.sample_question = {
+            'question': 'In what year did Nixon resign?',
+            'answer': '1974', 
+            'difficulty': 3, 
+            'category': 2
+        }
+
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -34,14 +42,42 @@ class TriviaTestCase(unittest.TestCase):
     Write at least one test for each test for successful operation and for expected errors.
     """
 
-    # def test_get_paginated_questions(self): 
-    #     response = self.client().get('/questions')
-    #     data = json.loads(response.data)
+    def test_get_paginated_questions(self): 
+        response = self.client().get('/questions')
+        data = json.loads(response.data)
 
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(data['success'], True)
-    #     self.assertTrue(data['total_questions'])
-    #     self.assertTrue(len(data['questions']))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['total_questions'])
+        self.assertTrue(len(data['questions']))
+
+    def test_delete_question(self): 
+
+        question = Question(
+            question = self.sample_question['question'], 
+            answer = self.sample_question['answer'], 
+            difficulty = self.sample_question['difficulty'], 
+            category = self.sample_question['category']
+        )
+
+        question.insert()
+
+        q_id = question.id 
+
+        questions_before = Question.query.all() 
+        response = self.client().delete('questions/{}'.format(q_id))
+        data = json.loads(response.data)
+        questions_after = Question.query.all() 
+
+        #Deleted question 
+        deleted_question = Question.query.get(q_id)
+
+        self.assertEqual(deleted_question, None)
+        self.assertTrue(len(questions_before) - len(questions_after) == 1)
+        self.assertEqual(data['response.status_code'], 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['deleted'], q_id) 
+    
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
