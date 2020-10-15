@@ -79,8 +79,8 @@ python test_flaskr.py
 ### Endpoints
 
 #### GET '/categories'
-- *Fetches a dictionary of categories in which the keys are the ids and the values are the corresponding string of the category 
-- *Example Response: 
+- Fetches a dictionary of categories in which the keys are the ids and the values are the corresponding string of the category 
+- Example Response: 
 ```
 {
     'success': True, 
@@ -96,8 +96,8 @@ python test_flaskr.py
 ```
 
 #### GET '/questions'
-- *Fetches a list of questions that are paginated in groups of 10 along with list of categories and total number of questions
-- *Example Response: 
+- Fetches a list of questions that are paginated in groups of 10 along with list of categories and total number of questions
+- Example Response: 
 ```
 {
     'success': True, 
@@ -130,8 +130,8 @@ python test_flaskr.py
 ```
 
 #### DELETE '/questions/<int:id>'
-- *Deletes a question, given an id 
-- *Example Response: 
+- Deletes a question, given an id 
+- Example Response: 
 ```
 {
     'success': True, 
@@ -140,9 +140,9 @@ python test_flaskr.py
 ```
 
 #### POST '/questions'
-- *Adds a new question to the database, given all the required parameters 
-- *Required parameters: question, answer, difficulty, category
-- *Example Response: 
+- Adds a new question to the database, given all the required parameters 
+- Required parameters: question, answer, difficulty, category
+- Example Response: 
 ```
 {
     'success': True, 
@@ -155,9 +155,45 @@ python test_flaskr.py
 ``` 
 
 #### POST '/questions/search'
-
+- Searches for questions using a search term in JSON request parameters 
+- Example Response: 
+```
+{
+    'success': True, 
+    'questions': [
+        ...list of all questions with a substring matching the search term parameter
+    ], 
+    'total_questions': 2, 
+    'current_category': None
+}
+```
 
 #### GET '/categories/<int:id>/questions'
-
+- Fetches a dictionary of questions for a specific category 
+- Example Response: 
+```
+{
+    'success': True, 
+    'questions': [
+        ...list of all questions within the given category
+    ], 
+    'total_questions': 12, 
+    'current_category': 2
+}
+```
 
 #### POST '/quizzes'
+- Fetches a random question from the selected category 
+- Example Response: 
+```
+{
+    'success': True, 
+    'question': {
+        'answer': 'Muhammad Ali'
+        'category': 6, 
+        'difficulty': 1, 
+        'id': 9, 
+        'question': "What boxer's original name is Cassius Clay?"
+    }
+}
+```
