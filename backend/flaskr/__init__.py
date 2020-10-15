@@ -49,14 +49,16 @@ def create_app(test_config=None):
   @app.route('/categories')
   def get_categories():
     categories = Category.query.all()
-    category_types = [category.type for category in categories] 
+    category_dict = {}
+    for category in categories: 
+      category_dict[category.id] = category.type 
 
-    if len(category_types) == 0:
+    if len(category_dict) == 0:
       abort(404)
 
     return jsonify({
       'success': True, 
-      'categories': category_types
+      'categories': category_dict
     })
 
 
@@ -80,7 +82,9 @@ def create_app(test_config=None):
     current_questions = paginate_questions(request, questions)
 
     categories = Category.query.all()
-    category_types = [category.type for category in categories]
+    category_dict = {}
+    for category in categories: 
+      category_dict[category.id] = category.type
 
     if len(current_questions) == 0: 
       abort(400)
@@ -89,7 +93,7 @@ def create_app(test_config=None):
       'success': True,
       'questions': current_questions,
       'total_questions': total_questions,
-      'categories': category_types,
+      'categories': category_dict,
       'current_category': 'test'
     })
 
@@ -201,6 +205,24 @@ def create_app(test_config=None):
   category to be shown. 
   '''
 
+  @app.route('/categories/<id>/questions')
+  def get_questions_by_category(id):
+    category = Category.query.get(id)
+
+    if category == None: 
+      abort(400)
+
+    #Get questions with same category id
+    questions = Question.query.filter_by(category=category.id).all()
+
+    paginated_questions = paginate_questions(request, questions)
+
+    return jsonify({
+      'success': True,
+      'questions': paginated_questions, 
+      'total_questions': len(questions), 
+      'current_category': category.type  
+    })
 
   '''
   @TODO: 
