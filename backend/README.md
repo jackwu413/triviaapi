@@ -61,29 +61,6 @@ Setting the `FLASK_ENV` variable to `development` will detect file changes and r
 Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
 
 
-REVIEW_COMMENT
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
-
-GET '/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
-
-```
-
 
 ## Testing
 To run the tests, run
@@ -97,13 +74,12 @@ python test_flaskr.py
 ## API Documentation
 
 ### Getting Started 
-* Base URL: This application is hosted locally http://170.0.0.1:5000
+* Base URL: This application is hosted at http://localhost:3000
 
 ### Endpoints
 
 #### GET '/categories'
 - *Fetches a dictionary of categories in which the keys are the ids and the values are the corresponding string of the category 
-- *Request Parameters: None
 - *Example Response: 
 ```
 {
@@ -120,13 +96,63 @@ python test_flaskr.py
 ```
 
 #### GET '/questions'
-
+- *Fetches a list of questions that are paginated in groups of 10 along with list of categories and total number of questions
+- *Example Response: 
+```
+{
+    'success': True, 
+    'questions': [
+        {
+            'answer': 'Muhammad Ali'
+            'category': 6, 
+            'difficulty': 1, 
+            'id': 9, 
+            'question': "What boxer's original name is Cassius Clay?"
+        },
+        {
+            'answer': '1974'
+            'category': 4, 
+            'difficulty': 1, 
+            'id': 2, 
+            'question': "What year did Nixon resign?"
+        }
+    ],
+    'total_questions': 2, 
+    'categories': {
+        '1': 'Science', 
+        '2': 'Art', 
+        '3': 'Geography', 
+        '4': 'History', 
+        '5': 'Entertainment', 
+        '6': 'Sports'
+    }
+}
+```
 
 #### DELETE '/questions/<int:id>'
-
+- *Deletes a question, given an id 
+- *Example Response: 
+```
+{
+    'success': True, 
+    'deleted': 4
+}
+```
 
 #### POST '/questions'
-
+- *Adds a new question to the database, given all the required parameters 
+- *Required parameters: question, answer, difficulty, category
+- *Example Response: 
+```
+{
+    'success': True, 
+    'created': 14, 
+    'questions': [
+        ...list of all questions (including latest addition)
+    ], 
+    'total_questions': 14
+}
+``` 
 
 #### POST '/questions/search'
 
