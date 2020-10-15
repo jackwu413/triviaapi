@@ -236,6 +236,50 @@ def create_app(test_config=None):
   and shown whether they were correct or not. 
   '''
 
+  @app.route('/quizzes', methods=['POST'])
+  def get_quiz_question():
+    body = request.get_json() 
+    previous_questions = body['previous_questions']
+    category = body['quiz_category']
+
+    if (previous_questions == None) or (category == None): 
+      abort(400)
+
+    #id 0 means all categories, else query from specific category 
+    if (category['id'] == 0): 
+      questions = Question.query.all() 
+    else: 
+      questions = Question.query.filter_by(category=category['id']).all()
+
+    #get random question
+    def get_random_question(): 
+      r = random.randrange(0,len(questions),1)
+      return questions[r]
+
+    #check if question has been used 
+    def check_in_previous(q):
+      used = False 
+      for question in previous_questions: 
+        if question == q.id: 
+          used = True 
+      return used 
+
+    current_question = get_random_question()
+
+    while(check_in_previous(current_question)):
+      current_question = get_random_question() 
+      if len(previous_questions) == len(questions): 
+        return jsonify({
+          'success': True
+        })
+
+    return jsonify({
+      'success': True, 
+      'question': current_question.format()
+    }) 
+
+
+
   '''
   @TODO: 
   Create error handlers for all expected errors 
