@@ -130,10 +130,13 @@ def create_app(test_config=None):
   def post_question(): 
     body = request.get_json()
 
-    new_question = body.get('question', None)
-    new_answer = body.get('answer', None) 
-    new_difficulty = body.get('difficulty', None)
-    new_category = body.get('category', None)
+    new_question = body['question']
+    new_answer = body['answer']
+    new_difficulty = body['difficulty']
+    new_category = body['category']
+
+    if ((new_question == None) or (new_answer == None) or (new_difficulty == None) or (new_category == None)): 
+      abort(422)
 
     try: 
       question = Question(
@@ -168,6 +171,26 @@ def create_app(test_config=None):
   only question that include that string within their question. 
   Try using the word "title" to start. 
   '''
+
+  @app.route('/questions/search', methods=['POST'])
+  def search_question(): 
+    body = request.get_json()
+    search_term = body['searchTerm'] 
+    results = Question.query.filter(
+      Question.question.ilike(f'%{search_term}%')).all()
+  
+
+    if (len(results) == 0): 
+      abort(404)
+
+    paginated_results = paginate_questions(request, results)
+    
+    return jsonify({
+      'success': True, 
+      'questions': paginated_results, 
+      'total_questions': len(results),
+      'current_category': 'test'
+    })
 
   '''
   @TODO: 

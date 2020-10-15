@@ -93,8 +93,31 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertTrue(len(questions_after) - len(questions_before) == 1) 
         self.assertIsNotNone(question)
+    def test_422_question_creation_fails(self): 
+        questions_before = Question.query.all()
+        response = self.client().post('/questions', json={})
+        data = json.loads(response.data)
 
+        questions_after = Question.query.all()
 
+        self.assertEqual(response.status_code, 422) 
+        self.assertEqual(data['success'], False)
+        self.assertTrue(len(questions_before) == len(questions_after))
+
+    def test_search_questions(self): 
+        response = self.client().post('/questions/search', json={'searchTerm': 'Tom Hanks'})
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(len(data['questions']), 1)
+    def test_404_search_questions_fails(self): 
+        response = self.client().post('/questions/search', json={'searchTerm': 'jdfksafjdksl'})
+        data = json.loads(response.data) 
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'resource not found')
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
