@@ -57,8 +57,6 @@ def create_app(test_config=None):
       'categories': category_dict
     })
 
-
-
   @app.route('/questions')
   def get_questions():
     questions = Question.query.all() 
@@ -81,8 +79,6 @@ def create_app(test_config=None):
       'current_category': 'test'
     })
 
-
-
   @app.route('/questions/<int:id>', methods=['DELETE'])
   def delete_question(id): 
     try:
@@ -96,8 +92,6 @@ def create_app(test_config=None):
       })
     except: 
       abort(422)
-
-
 
   @app.route('/questions', methods=['POST'])
   def post_question(): 
@@ -135,28 +129,13 @@ def create_app(test_config=None):
     except:
       abort(422)
 
-
-
   @app.route('/questions/search', methods=['POST'])
   def search_question(): 
     body = request.get_json()
-    
-
-    if(body['searchTerm'] ): 
-      search_term = body['searchTerm'] 
-      results = Question.query.filter(Question.question.ilike(f'%{search_term}%')).all()
-      if (len(results) == 0): 
-        abort(404)
+    search_term = body.get('searchTerm')
 
 
-    print()
-    print()
-    print("RESULTS")
-    print(len(results))
-    print()
-    print()
-
-
+    results = Question.query.filter(Question.question.ilike(f'%{search_term}%')).all()
     if (len(results) == 0): 
       abort(404)
 
@@ -169,10 +148,11 @@ def create_app(test_config=None):
       'current_category': 'test'
     })
 
-
   @app.route('/categories/<id>/questions')
   def get_questions_by_category(id):
-    category = Category.query.get(id).one_or_none()
+    category = Category.query.get(id)
+
+    print(category)
 
     if category == None: 
       abort(400)
@@ -189,13 +169,11 @@ def create_app(test_config=None):
       'current_category': category.type  
     })
 
-
-
   @app.route('/quizzes', methods=['POST'])
   def get_quiz_question():
     body = request.get_json() 
-    previous_questions = body['previous_questions']
-    category = body['quiz_category']
+    previous_questions = body.get('previous_questions')
+    category = body.get('quiz_category')
 
     if (previous_questions == None) or (category == None): 
       abort(400)
