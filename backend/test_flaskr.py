@@ -112,7 +112,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertEqual(len(data['questions']), 1)
     def test_404_search_questions_fails(self): 
-        response = self.client().post('/questions/search', json={'searchTerm': ''})
+        response = self.client().post('/questions/search', json={'searchTerm': 'jkl;dfsgsdfsre'})
 
         data = json.loads(response.data) 
 

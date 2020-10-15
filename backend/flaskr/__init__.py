@@ -152,8 +152,6 @@ def create_app(test_config=None):
   def get_questions_by_category(id):
     category = Category.query.get(id)
 
-    print(category)
-
     if category == None: 
       abort(400)
 
@@ -221,7 +219,7 @@ def create_app(test_config=None):
       "success": False, 
       "error": 404, 
       "message": "resource not found"
-    })
+    }), 404
   
   @app.errorhandler(422)
   def unprocessable(error): 
@@ -229,7 +227,7 @@ def create_app(test_config=None):
       "success": False, 
       "error": 422, 
       "message": "unprocessable"
-    })
+    }), 422
 
   @app.errorhandler(400)
   def bad_request(error): 
@@ -237,7 +235,7 @@ def create_app(test_config=None):
       "success": False, 
       "error": 400, 
       "message": "bad request"
-    })
+    }), 400
 
 
   return app
