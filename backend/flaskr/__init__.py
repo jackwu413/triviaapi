@@ -148,7 +148,7 @@ def create_app(test_config=None):
       'current_category': 'test'
     })
 
-  @app.route('/categories/<id>/questions')
+  @app.route('/categories/<int:id>/questions')
   def get_questions_by_category(id):
     category = Category.query.get(id)
 
