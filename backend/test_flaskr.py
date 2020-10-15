@@ -78,6 +78,23 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertEqual(data['deleted'], q_id) 
     
+    def test_post_new_question(self): 
+        questions_before = Question.query.all() 
+
+        #response data sent from endpoint 
+        response = self.client().post('/questions', json=self.sample_question)
+        data = json.loads(response.data)
+
+        questions_after = Question.query.all()
+
+        question = Question.query.filter_by(id=data['created']).one_or_none() 
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(len(questions_after) - len(questions_before) == 1) 
+        self.assertIsNotNone(question)
+
+
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
