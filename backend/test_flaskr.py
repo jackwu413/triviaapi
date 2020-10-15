@@ -74,7 +74,7 @@ class TriviaTestCase(unittest.TestCase):
 
         self.assertEqual(deleted_question, None)
         self.assertTrue(len(questions_before) - len(questions_after) == 1)
-        self.assertEqual(data['response.status_code'], 200)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertEqual(data['deleted'], q_id) 
     
@@ -95,7 +95,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertIsNotNone(question)
     def test_422_question_creation_fails(self): 
         questions_before = Question.query.all()
-        response = self.client().post('/questions', json={})
+        response = self.client().post('/questions', json={'question': 'new question', 'answer': 'new answer', 'category': 1})
         data = json.loads(response.data)
 
         questions_after = Question.query.all()
@@ -112,7 +112,11 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertEqual(len(data['questions']), 1)
     def test_404_search_questions_fails(self): 
-        response = self.client().post('/questions/search', json={'searchTerm': 'jdfksafjdksl'})
+        response = self.client().post('/questions/search', json={'searchTerm': ''})
+
+        print("search response")
+        print(response)
+
         data = json.loads(response.data) 
 
         self.assertEqual(response.status_code, 404)
@@ -122,12 +126,16 @@ class TriviaTestCase(unittest.TestCase):
     def test_get_questions_by_category(self): 
         response = self.client().get('/categories/2/questions')
         data = json.loads(response.data)
-
+        print(data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertEqual(data['current_category'], 'Art')
     def test_400_get_questions_by_category_fails(self): 
-        response = self.client().get('/categories/20/questions')
+        response = self.client().get('/categories/200/questions')
+
+        print("get by category response")
+        print(response)
+
         data = json.loads(response.data) 
 
         self.assertEqual(response.status_code, 400)
