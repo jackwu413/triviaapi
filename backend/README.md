@@ -80,6 +80,7 @@ python test_flaskr.py
 
 #### GET '/categories'
 - Fetches a dictionary of categories in which the keys are the ids and the values are the corresponding string of the category 
+- Request Parameters: None
 - Example Response: 
 ```
 {
@@ -97,6 +98,7 @@ python test_flaskr.py
 
 #### GET '/questions'
 - Fetches a list of questions that are paginated in groups of 10 along with list of categories and total number of questions
+- Request Parameters: page number 
 - Example Response: 
 ```
 {
@@ -131,6 +133,7 @@ python test_flaskr.py
 
 #### DELETE '/questions/<int:id>'
 - Deletes a question, given an id 
+- Request Parameters: question id
 - Example Response: 
 ```
 {
@@ -141,7 +144,7 @@ python test_flaskr.py
 
 #### POST '/questions'
 - Adds a new question to the database, given all the required parameters 
-- Required parameters: question, answer, difficulty, category
+- Request Parameters: question, answer, difficulty, category
 - Example Response: 
 ```
 {
@@ -156,6 +159,7 @@ python test_flaskr.py
 
 #### POST '/questions/search'
 - Searches for questions using a search term in JSON request parameters 
+- Request Paramters: search term
 - Example Response: 
 ```
 {
@@ -170,6 +174,7 @@ python test_flaskr.py
 
 #### GET '/categories/<int:id>/questions'
 - Fetches a dictionary of questions for a specific category 
+- Request Parameters: category id
 - Example Response: 
 ```
 {
@@ -184,6 +189,7 @@ python test_flaskr.py
 
 #### POST '/quizzes'
 - Fetches a random question from the selected category 
+- Request Parameters: category id 
 - Example Response: 
 ```
 {
